@@ -1,0 +1,27 @@
+﻿<Page
+    x:Class="AudioTagger.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:dataBind="using:AudioTagger.ui.Data"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.08*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+       
+        <Button x:Name="openFolderButton" Content="Open Folder" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="55" Width="214" Click="PickFolderOnClick"/>
+        <Button Content="Find Info" HorizontalAlignment="Left" Margin="229,10,0,0" VerticalAlignment="Top" Height="55" Width="214" Click="FindTagOnClick"/>
+        <!-- <Button Content="Apply Tag" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="448,10,0,0" Width="214" Height="55" Click="SaveTagOnClick"/> -->
+
+        <Frame x:Name="ResponseFrame"
+               Grid.Row="1"
+               HorizontalAlignment="Stretch"
+               VerticalAlignment="Stretch"
+               Margin="0,12,0,0"/>
+    </Grid>
+</Page>

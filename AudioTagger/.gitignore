@@ -1,0 +1,5 @@
+bin/*
+obj/*
+AudioTagger_TemporaryKey.pfx
+Package.appxmanifest
+/temp_music_files
