@@ -1,8 +1,7 @@
-﻿using AudioTagger.Network;
-using AudioTagger.Network.InfoSong;
+﻿using AudioTagger.Network.APIRequest;
+using AudioTagger.Network.APIRequest.LastFM.Parameters;
 using AudioTagger.Network.ResponseDataJson;
 using AudioTagger.Network.ResponseDataJson.AlbumInfo;
-using AudioTagger.Network.ResponseDataJson.CoverArtArchiveResponse;
 using Refit;
 using System;
 using System.Net.Http;

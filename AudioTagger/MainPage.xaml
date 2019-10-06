@@ -13,15 +13,22 @@
             <RowDefinition Height="0.08*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-       
-        <Button x:Name="openFolderButton" Content="Open Folder" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="55" Width="214" Click="PickFolderOnClick"/>
-        <Button Content="Find Info" HorizontalAlignment="Left" Margin="229,10,0,0" VerticalAlignment="Top" Height="55" Width="214" Click="FindTagOnClick"/>
+
+        <StackPanel Orientation="Horizontal" >
+            <Button Content="Open Folder" Margin="8,0,4,0" Click="PickFolderOnClick"/>
+            <Button Content="Modify Tag" Margin="4,0,4,0" Click="FindTagOnClick"/>
+            <Button Content="Find/Add Lyrics" Margin="4,0,4,0" Click="FindLyricsOnClick"/>
+        </StackPanel>
+        <!--
+        <Button Content="Open Folder" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="55" Width="214" Click="PickFolderOnClick"/>
+        <Button Content="Find Tag" HorizontalAlignment="Left" Margin="229,10,0,0" VerticalAlignment="Top" Height="55" Width="214" Click="FindTagOnClick"/>
+        <Button Content="Find/Add Lyrics"/> -->
         <!-- <Button Content="Apply Tag" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="448,10,0,0" Width="214" Height="55" Click="SaveTagOnClick"/> -->
 
         <Frame x:Name="ResponseFrame"
                Grid.Row="1"
                HorizontalAlignment="Stretch"
                VerticalAlignment="Stretch"
-               Margin="0,12,0,0"/>
+               Margin="8,0,8,4"/>
     </Grid>
 </Page>

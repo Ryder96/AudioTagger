@@ -3,7 +3,6 @@ using AudioTagger.Network.ResponseDataJson;
 using AudioTagger.Network.ResponseDataJson.AlbumInfo;
 using AudioTagger.ui.Data;
 using AudioTagger.ui.MVP.LastFM;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -39,6 +38,9 @@ namespace AudioTagger.ui.MVVM.ModelView
             m_CurrentFolder = string.Empty;
             m_SongUpdated = false;
         }
+
+
+        public ILastFMModel Model { get; set; }
 
         public string Title
         {
@@ -191,7 +193,6 @@ namespace AudioTagger.ui.MVVM.ModelView
         }
 
 
-        public ILastFMModel Model { get; set; }
 
         public SongFile Song
         {
@@ -203,9 +204,9 @@ namespace AudioTagger.ui.MVVM.ModelView
             set
             {
                 m_Song = value;
-                Title = Song.Tag.Title ?? string.Empty;
-                Artist = Song.Artist ?? string.Empty;
-                Album = Song.Album ?? string.Empty;
+                Title = Song.Tag.Title ?? "No Title";
+                Artist = Song.Artist ?? "No Artist";
+                Album = Song.Album ?? "No Album";
             }
         }
 

@@ -16,7 +16,6 @@ namespace AudioTagger.ui.MVVM.ModelView
     {
         private bool m_FolderOpened = false;
         private IList<StorageFile> m_List;
-        private IFolderModel m_Model;
         private string m_CWD;
         private SongFile m_Song;
         private ObservableCollection<SongFile> m_SongList;
@@ -107,17 +106,7 @@ namespace AudioTagger.ui.MVVM.ModelView
             }
         }
 
-        public IFolderModel FolderModel
-        {
-            get
-            {
-                return m_Model;
-            }
-            set
-            {
-                m_Model = value;
-            }
-        }
+        public IFolderModel FolderModel { get; set; }
 
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
@@ -128,8 +117,8 @@ namespace AudioTagger.ui.MVVM.ModelView
         {
             try
             {
-                m_List = await m_Model.OpenFolder();
-                CWD = m_Model.PathFolder();
+                m_List = await FolderModel.OpenFolder();
+                CWD = FolderModel.PathFolder();
                 FolderOpened = true;
                 UpdateSongList(m_List);
             }
@@ -192,7 +181,7 @@ namespace AudioTagger.ui.MVVM.ModelView
             {
                 m_List.Clear();
                 m_SongList.Clear();
-                m_List = await m_Model.OpenFolder(m_CWD);
+                m_List = await FolderModel.OpenFolder(m_CWD);
                 UpdateSongList(m_List);
             }
             catch (Exception) { }

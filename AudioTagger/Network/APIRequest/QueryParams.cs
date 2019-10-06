@@ -1,4 +1,4 @@
-﻿namespace AudioTagger.Network.InfoSong
+﻿namespace AudioTagger.Network.APIRequest.LastFM.Parameters
 {
     public class QueryParam
     {

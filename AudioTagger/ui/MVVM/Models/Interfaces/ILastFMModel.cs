@@ -1,10 +1,5 @@
 ﻿using AudioTagger.Network.ResponseDataJson;
 using AudioTagger.Network.ResponseDataJson.AlbumInfo;
-using AudioTagger.Network.ResponseDataJson.CoverArtArchiveResponse;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AudioTagger.ui.MVP.LastFM

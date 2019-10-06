@@ -20,6 +20,7 @@ namespace AudioTagger
 
         private FolderPicker_MV m_FolderPickerMV;
         private LastFM_MV m_LastFMMV;
+        private Lyrics_MV m_LyricsMV;
         private SongFile m_SongSelected;
         private string m_CurrenFolder;
         private bool m_FindTagFrameOpened;
@@ -29,6 +30,7 @@ namespace AudioTagger
             m_SongSelected = null;
             m_FolderPickerMV = new FolderPicker_MV();
             m_LastFMMV = new LastFM_MV();
+            m_LyricsMV = new Lyrics_MV();
             SubscribeToEvents();
             this.InitializeComponent();
         }
@@ -37,6 +39,12 @@ namespace AudioTagger
         {
             m_FolderPickerMV.PropertyChanged += M_FolderPickerMV_PropertyChanged;
             m_LastFMMV.PropertyChanged += M_LastFMMV_PropertyChanged;
+            m_LyricsMV.PropertyChanged += M_LyricsMV_PropertyChanged;
+        }
+
+        private void M_LyricsMV_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            
         }
 
         private void M_LastFMMV_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -60,6 +68,9 @@ namespace AudioTagger
             {
                 m_SongSelected = m_FolderPickerMV.Song;
                 m_LastFMMV.Song = m_FolderPickerMV.Song;
+
+                m_LyricsMV.Title = m_SongSelected?.Title ?? "No Title";
+                m_LyricsMV.Artist = m_SongSelected?.Artist ?? "No title";
             }
             if(e.PropertyName.Equals("CWD"))
             {
@@ -81,39 +92,14 @@ namespace AudioTagger
                 this.ResponseFrame.Navigate(typeof(ResponseSongPage), m_LastFMMV);
             }
         }
-        private void SaveTagOnClick(object sender, RoutedEventArgs e)
-        {
-            SaveTagFile();
-        }
 
-        private void SaveTagFile()
+        private void FindLyricsOnClick(object sender, RoutedEventArgs e)
         {
-            DataFile newTag = m_LastFMMV.Data();
-            if (newTag == null)
+            if (m_SongSelected != null)
             {
-                DisplayAsyncDialog("Tag not applied");
-                return;
+                this.ResponseFrame.Navigate(typeof(LyricsPage), m_LyricsMV);
             }
-            newTag.FolderUrl = m_CurrenFolder;
-            newTag.ApplyTag();
-            m_FolderPickerMV.RefreshFolder();
-            m_LastFMMV.Clear();
-            DisplayAsyncDialog("Successefully");
-            this.ResponseFrame.Navigate(typeof(ListSongPage), m_FolderPickerMV);
-
         }
-
-        private async void DisplayAsyncDialog(string result)
-        {
-            ContentDialog TagPrompDialog = new ContentDialog
-            {
-                Title = "Apply Tag",
-                Content = result,
-                CloseButtonText = "OK"
-            };
-            _ = await TagPrompDialog.ShowAsync();
-        }
-
 
     }
 

@@ -185,6 +185,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.RowSpan="2"
+                            Grid.ColumnSpan="2"
                         VerticalAlignment="Center"
                         Margin="25,0,25,0">
                     <TextBlock Text="Title"/>

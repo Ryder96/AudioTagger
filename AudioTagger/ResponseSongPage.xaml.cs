@@ -46,16 +46,16 @@ namespace AudioTagger
 
         private void UpdateSearchInfo()
         {
-            tb_SongTitle.Text = m_ModelView.Song.Title;
-            tb_SongArtist.Text = m_ModelView.Song.Artist;
-            tb_SongAlbum.Text = m_ModelView.Song.Album;
+            tb_SongTitle.Text = m_ModelView.Title;
+            tb_SongArtist.Text = m_ModelView.Artist;
+            tb_SongAlbum.Text = m_ModelView.Album;
         }
 
         private void UpdateCurrentInfo()
         {
-            tb_CurrentTitle.Text = m_ModelView.Song.Title;
-            tb_CurrentArtist.Text = m_ModelView.Song.Artist;
-            tb_CurrentAlbum.Text = m_ModelView.Song.Album;
+            tb_CurrentTitle.Text = m_ModelView.Title;
+            tb_CurrentArtist.Text = m_ModelView.Artist;
+            tb_CurrentAlbum.Text = m_ModelView.Album ?? "No Album";
             IEX_CurrentCover.Source = m_ModelView.Song.Image;
         }
 
@@ -63,7 +63,7 @@ namespace AudioTagger
         {
             tb_NewTitle.Text = m_ModelView.Title;
             tb_NewArtist.Text = m_ModelView.Artist;
-            tb_NewAlbum.Text = m_ModelView.Album ?? "no album";
+            tb_NewAlbum.Text = m_ModelView.Album ?? "No Album";
             IEX_NewCover.Source = m_ModelView.Cover;
         }
 
