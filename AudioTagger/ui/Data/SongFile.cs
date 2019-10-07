@@ -20,6 +20,18 @@ namespace AudioTagger.ui.Data
 
         public SongFile(){}
 
+        public SongFile(SongFile file)
+        {
+            FileName = file.FileName ?? string.Empty;
+            Title = file.Title ?? string.Empty;
+            Artist = file.Artist ?? string.Empty;
+            Album = file.Album ?? string.Empty;
+            Path = file.Path ?? string.Empty;
+            TagType = file.TagType ?? string.Empty;
+            Tag = file.Tag;
+            Image = file.Image;
+        }
+
         public override string ToString()
         {
             string info = "";

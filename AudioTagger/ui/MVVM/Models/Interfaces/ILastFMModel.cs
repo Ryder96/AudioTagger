@@ -10,8 +10,8 @@ namespace AudioTagger.ui.MVP.LastFM
         Task<TrackInfo> RequestInfoTrack(string mbid);
         Task<TrackInfo> RequestInfoTrack(string title, string artist);
         //Tast<AlbumInfo> RequestoAlbumInfo(string mbid);
-        Task<AlbumInfoResponse> QueryInfoAlbum(string mbid);
-        Task<AlbumInfoResponse> QueryInfoAlbum(string artist,string album);
+        Task<AlbumInfoResponse> RequestInfoAlbum(string mbid);
+        Task<AlbumInfoResponse> RequestInfoAlbum(string artist,string album);
 
     }
 }

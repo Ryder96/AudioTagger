@@ -33,53 +33,46 @@ namespace AudioTagger
             {
                 m_ModelView = e.Parameter as LastFM_MV;
                 m_ModelView.Model = new LastFMModel();
-                m_ModelView.PropertyChanged += M_ModelView_PropertyChanged;
-                LW_Tracks.ItemsSource = m_ModelView.Tracks;
+                m_ModelView.PropertyChanged += ModelView_PropertyChanged;
                 m_ModelView.OnDisplay = true;
                 m_ModelView.SongUpdated = false;
                 UpdateCurrentInfo();
                 UpdateSearchInfo();
                 m_ModelView.SearchTrack();
+                LW_Tracks.ItemsSource = m_ModelView.Tracks;
             }
             base.OnNavigatedTo(e);
         }
 
         private void UpdateSearchInfo()
         {
-            tb_SongTitle.Text = m_ModelView.Title;
-            tb_SongArtist.Text = m_ModelView.Artist;
-            tb_SongAlbum.Text = m_ModelView.Album;
+            tb_SongTitle.Text = m_ModelView.File.Title;
+            tb_SongArtist.Text = m_ModelView.File.Artist;
+            tb_SongAlbum.Text = m_ModelView.File.Album ?? "No Album";
         }
 
         private void UpdateCurrentInfo()
         {
-            tb_CurrentTitle.Text = m_ModelView.Title;
-            tb_CurrentArtist.Text = m_ModelView.Artist;
-            tb_CurrentAlbum.Text = m_ModelView.Album ?? "No Album";
-            IEX_CurrentCover.Source = m_ModelView.Song.Image;
+            tb_CurrentTitle.Text = m_ModelView.File.Title;
+            tb_CurrentArtist.Text = m_ModelView.File.Artist;
+            tb_CurrentAlbum.Text = m_ModelView.File.Album ?? "No Album";
+            IEX_CurrentCover.Source = m_ModelView.File.Image;
         }
 
         private void UpdateNewInfoView()
         {
-            tb_NewTitle.Text = m_ModelView.Title;
-            tb_NewArtist.Text = m_ModelView.Artist;
-            tb_NewAlbum.Text = m_ModelView.Album ?? "No Album";
-            IEX_NewCover.Source = m_ModelView.Cover;
+            tb_NewTitle.Text = m_ModelView.Bundle.Title;
+            tb_NewArtist.Text = m_ModelView.Bundle.Artist;
+            tb_NewAlbum.Text = m_ModelView.Bundle.Album ?? "No Album";
+            IEX_NewCover.Source = m_ModelView.Bundle.Image;
         }
 
-        private void M_ModelView_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void ModelView_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            UpdateNewInfoView();
-        }
-
-        private string InfoToString(IList<Track> tracks)
-        {
-            string info = "";
-            foreach (Track track in tracks)
+            if (e.PropertyName.Equals("Bundle"))
             {
-                info += track.name + "\n" + track.artist + "\n";
+                UpdateNewInfoView();
             }
-            return info;
         }
 
         private void OnItemClick(object sender, ItemClickEventArgs e)
@@ -90,13 +83,6 @@ namespace AudioTagger
                 m_ModelView.UpdateTrackInfo(trackBundle);
                 UpdateNewInfoView();
             }
-        }
-
-        private void CleanView()
-        {
-            tb_SongTitle.Text = string.Empty;
-            tb_SongArtist.Text = string.Empty;
-            tb_SongAlbum.Text = string.Empty;
         }
 
         private void BackButtonOnClick(object sender, RoutedEventArgs e)
@@ -119,10 +105,7 @@ namespace AudioTagger
         {
             if (!tb_SongTitle.Text.Equals(string.Empty))
             {
-                m_ModelView.Title = tb_SongTitle.Text;
-                m_ModelView.Artist = tb_SongArtist.Text;
-                m_ModelView.Tracks.Clear();
-                m_ModelView.SearchTrack();
+                m_ModelView.SearchTrack(tb_SongTitle.Text, tb_SongArtist.Text);
             }
         }
 
@@ -147,13 +130,12 @@ namespace AudioTagger
 
         private void SaveTagFile()
         {
-            DataFile newTag = m_ModelView.Data();
+            DataFile newTag = m_ModelView.GenerateData();
             if (newTag == null)
             {
                 DisplayAsyncDialog("Tag not applied");
                 return;
             }
-            newTag.FolderUrl = m_ModelView.CurrentFolder;
             newTag.ApplyTag();
             DisplayAsyncDialog("Successefully");
             m_ModelView.SongUpdated = true;

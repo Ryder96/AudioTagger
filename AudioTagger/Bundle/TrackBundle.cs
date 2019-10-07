@@ -1,22 +1,42 @@
-﻿using AudioTagger.Network.ResponseDataJson.AlbumInfo;
-using AudioTagger.Network.ResponseDataJson.TrackInfoResponse;
-using System.Collections.Generic;
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace AudioTagger.Bundle
 {
-    class TrackBundle
+    class TrackBundle : INotifyPropertyChanged
     {
+        private string image;
+        private string album;
         public string Title { get; set; }
         public string Artist { get; set; }
-        public string Album { get; set; }
-        public string Image { get; set; }
+        public string Image 
+        { 
+            get { return image; }
+            set { if (!image.Equals(value)) { image = value; NotifyPropertyChanged(); } }
+        }
+
+        public string Album
+        {
+            get { return album; }
+            set { if (!album.Equals(value)) { album = value; NotifyPropertyChanged(); } }
+        }
 
         public TrackBundle(Network.ResponseDataJson.TrackInfoResponse.Track track)
         {
             InitTrackInfo(track);
         }
 
-        public TrackBundle() { }
+        public TrackBundle() {
+            image = string.Empty;
+            album = string.Empty;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
         private void InitTrackInfo(Network.ResponseDataJson.TrackInfoResponse.Track track)
         {
@@ -24,23 +44,6 @@ namespace AudioTagger.Bundle
             Artist = track.artist.name;
             Album = track.album?.title ?? string.Empty;
             Image = string.Empty;
-            //Image = InitImage(track.image);
-        }
-
-        private string InitImage(IList<Image> imageList)
-        {
-            if(imageList.Count != 0)
-            {
-                foreach(Image image in imageList)
-                {
-                    System.Diagnostics.Debug.WriteLine(image.text);
-                    if(image.size.Equals("large"))
-                    {
-                        return image.text ?? "";
-                    }
-                }
-            }
-            return "";
         }
 
         public override string ToString()

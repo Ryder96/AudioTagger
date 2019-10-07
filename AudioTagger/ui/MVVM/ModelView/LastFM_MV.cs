@@ -1,11 +1,12 @@
 ﻿using AudioTagger.Bundle;
 using AudioTagger.Network.ResponseDataJson;
-using AudioTagger.Network.ResponseDataJson.AlbumInfo;
 using AudioTagger.ui.Data;
 using AudioTagger.ui.MVP.LastFM;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
@@ -13,7 +14,191 @@ namespace AudioTagger.ui.MVVM.ModelView
 {
     class LastFM_MV : INotifyPropertyChanged
     {
-        private bool m_Display;
+        private SongFile file;
+        private string currentFolder;
+        private bool songUpdated;
+        private bool onDisplay;
+        private TrackBundle bundle;
+        private ObservableCollection<TrackBundle> tracks;
+        public event PropertyChangedEventHandler PropertyChanged;
+        
+        public ILastFMModel Model { get; set; }
+
+        public LastFM_MV()
+        {
+            onDisplay = false;
+            currentFolder = string.Empty;
+            songUpdated = false;
+            tracks = new ObservableCollection<TrackBundle>();
+        }
+
+        public SongFile File
+        {
+            get { return file; }
+            set { if (file != value) { file = new SongFile(value); }  }
+        }
+
+        public string Folder
+        {
+            get { return currentFolder; }
+            set { if (!currentFolder.Equals(value)) { currentFolder = value; } }
+        }
+
+        public bool OnDisplay
+        {
+            get { return onDisplay; }
+            set { if (value != onDisplay) { onDisplay = value; NotifyPropertyChanged(); } }
+        }
+
+        public bool SongUpdated
+        {
+            get { return songUpdated; }
+            set { if (value != songUpdated) { songUpdated = value; NotifyPropertyChanged(); } }
+        }
+
+        public TrackBundle Bundle
+        {
+            get { return bundle; }
+            set { if (bundle != value) { bundle = value; NotifyPropertyChanged(); } }
+        }
+        public ObservableCollection<TrackBundle> Tracks
+        {
+            get { return tracks; }
+            set { if (tracks != value) { tracks = value; NotifyPropertyChanged(); } }
+        }
+
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public DataFile GenerateData()
+        {
+            return new DataFile()
+            {
+                Title = bundle.Title,
+                Artist = bundle.Artist,
+                Album = bundle.Album,
+                CoverUrl = bundle.Image,
+                FileName = File.FileName,
+                FolderUrl = Folder
+            };
+        }
+
+        public async void SearchTrack()
+        {
+            if (File.Title.Equals(string.Empty) || File.Artist.Equals(string.Empty))
+            {
+                return;
+            }
+            var response = await Model.SearchTrack(File.Title, File.Artist);
+            ConvertToBundle(response.results.trackmatches.track);
+
+        }
+
+        public async void SearchTrack(string title, string artist)
+        {
+            var response = await Model.SearchTrack(title, artist);
+            Tracks.Clear();
+            ConvertToBundle(response.results.trackmatches.track);
+
+        }
+
+        private void ConvertToBundle(IList<Track> tracks)
+        {
+            foreach (var track in tracks)
+            {
+                TrackBundle bundle = new TrackBundle()
+                {
+                    Title = track.name,
+                    Artist = track.artist
+                };
+                if (track.image != null)
+                {
+                    foreach (var img in track.image)
+                    {
+                        if (img.size.Equals("extralarge") ||
+                            img.size.Equals("large") ||
+                            img.size.Equals("medium"))
+                        {
+                            bundle.Image = img.text;
+                        }
+                    }
+                }
+                SearchInfoTrack(bundle);
+                bundle.PropertyChanged += Bundle_PropertyChanged;
+                Tracks.Add(bundle);
+            }
+        }
+
+        private void Bundle_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            int index = Tracks.IndexOf(sender as TrackBundle);
+            Tracks[index] = sender as TrackBundle;
+            /*
+            Tracks.RemoveAt(index);
+            Tracks.Insert(index,sender as TrackBundle);
+            */
+        }
+
+        private async void SearchInfoTrack(TrackBundle bundle)
+        {
+            var response = await Model.RequestInfoTrack(bundle.Title, bundle.Artist);
+            if (response.Track.album != null)
+            {
+                bundle.Album = response.Track.album.title;
+                FilterImage(bundle, response.Track.album.image);
+            }
+            else
+            {
+                bundle.Album = string.Empty;
+            }
+            RetrieveCoverAlbum(bundle);
+        }
+
+        private async void RetrieveCoverAlbum(TrackBundle track)
+        {
+            if (!track.Album.Equals(string.Empty))
+            {
+                var response = await Model.RequestInfoAlbum(track.Album, track.Artist);
+                if (response.album != null && response.album.image != null)
+                {
+                    FilterImage(track, response.album.image);
+                }
+            }
+
+        }
+
+        private void FilterImage(TrackBundle track, IList<Image> images)
+        {
+            if (images != null)
+            {
+                foreach (var img in images)
+                {
+                    if (img.size.Equals("extralarge") ||
+                        img.size.Equals("large") ||
+                        img.size.Equals("medium"))
+                    {
+                        track.Image = img.text;
+                    }
+                }
+            }
+        }
+
+        public void UpdateTrackInfo(TrackBundle bundleClicked)
+        {
+            bundle = bundleClicked;
+        }
+        public void Clear()
+        {
+            Tracks?.Clear();
+            OnDisplay = false;
+        }
+    }
+}
+
+/*
+ private bool m_Display;
         private ObservableCollection<TrackBundle> m_TrackCollection;
         private string m_Title;
         private string m_Artist;
@@ -193,7 +378,6 @@ namespace AudioTagger.ui.MVVM.ModelView
         }
 
 
-
         public SongFile Song
         {
             get
@@ -363,7 +547,4 @@ namespace AudioTagger.ui.MVVM.ModelView
             Info = bundle.ToString();
             Cover = bundle.Image;
 
-        }
-
-    }
-}
+        }*/

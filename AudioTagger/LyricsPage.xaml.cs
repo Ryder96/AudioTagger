@@ -30,8 +30,8 @@ namespace AudioTagger
                 this.m_ModelView = e.Parameter as Lyrics_MV;
                 m_ModelView.Model = new LyricsModel();
                 LW_Lyrics.ItemsSource = m_ModelView.LyricList;
-                m_ModelView.SearchLyrics();
                 SubscribeToEvents();
+                m_ModelView.SearchLyrics();
             }
 
             base.OnNavigatedTo(e);

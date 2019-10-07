@@ -30,6 +30,9 @@ namespace AudioTagger.Network.ResponseDataXML
         public string Song { get; set; }
         [XmlElement(ElementName = "SongRank")]
         public int SongRank { get; set; }
+
+        [XmlAttribute(AttributeName = "nil", Namespace = "http://www.w3.org/2001/XMLSchema-instance")]
+        public string Nil { get; set; }
     }
 
     [XmlRoot(ElementName = "ArrayOfSearchLyricResult", Namespace = "http://api.chartlyrics.com/")]

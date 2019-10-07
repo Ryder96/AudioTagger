@@ -51,10 +51,11 @@
                  Grid.Column="1"
                  TextWrapping="Wrap"
                  IsReadOnly="True"
-                 Background="WhiteSmoke"
-                 Foreground="Black"
                  Margin="8,8,8,8"
                  Padding="16,16,16,16"
-                 AutomationProperties.Name="multi-line TextBox"/>
+                 TextAlignment="Center"
+                 AutomationProperties.Name="multi-line TextBox"
+                 Background="AntiqueWhite"
+                 Foreground="Black"/>
     </Grid>
 </Page>

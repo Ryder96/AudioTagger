@@ -37,17 +37,11 @@ namespace AudioTagger
 
         private void SubscribeToEvents()
         {
-            m_FolderPickerMV.PropertyChanged += M_FolderPickerMV_PropertyChanged;
-            m_LastFMMV.PropertyChanged += M_LastFMMV_PropertyChanged;
-            m_LyricsMV.PropertyChanged += M_LyricsMV_PropertyChanged;
+            m_FolderPickerMV.PropertyChanged += FolderPickerMV_PropertyChanged;
+            m_LastFMMV.PropertyChanged += LastFMMV_PropertyChanged;
         }
 
-        private void M_LyricsMV_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            
-        }
-
-        private void M_LastFMMV_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void LastFMMV_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if(e.PropertyName.Equals("OnDisplay"))
             {
@@ -62,20 +56,16 @@ namespace AudioTagger
             }
         }
 
-        private void M_FolderPickerMV_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void FolderPickerMV_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if(e.PropertyName.Equals("Song"))
             {
                 m_SongSelected = m_FolderPickerMV.Song;
-                m_LastFMMV.Song = m_FolderPickerMV.Song;
 
-                m_LyricsMV.Title = m_SongSelected?.Title ?? "No Title";
-                m_LyricsMV.Artist = m_SongSelected?.Artist ?? "No title";
             }
             if(e.PropertyName.Equals("CWD"))
             {
                 m_CurrenFolder = m_FolderPickerMV.CWD;
-                m_LastFMMV.CurrentFolder = m_CurrenFolder;
             }
         }
 
@@ -89,6 +79,8 @@ namespace AudioTagger
         {
             if (!m_FindTagFrameOpened && m_SongSelected != null)
             {
+                m_LastFMMV.File = m_FolderPickerMV.Song;
+                m_LastFMMV.Folder = m_CurrenFolder;
                 this.ResponseFrame.Navigate(typeof(ResponseSongPage), m_LastFMMV);
             }
         }
@@ -97,6 +89,8 @@ namespace AudioTagger
         {
             if (m_SongSelected != null)
             {
+                m_LyricsMV.Title = m_SongSelected?.Title ?? "No Title";
+                m_LyricsMV.Artist = m_SongSelected?.Artist ?? "No Title";
                 this.ResponseFrame.Navigate(typeof(LyricsPage), m_LyricsMV);
             }
         }

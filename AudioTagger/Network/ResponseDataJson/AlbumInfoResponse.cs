@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace AudioTagger.Network.ResponseDataJson.AlbumInfo
 {
-    public class Image
+   /* public class Image
     {
         [JsonProperty("#text")]
         public string text { get; set; }
         public string size { get; set; }
-    }
+    }*/
 
     public class Attr
     {

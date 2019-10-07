@@ -55,7 +55,7 @@ namespace AudioTagger.ui.MVP.LastFM
             return response;
         }
 
-        public async Task<AlbumInfoResponse> QueryInfoAlbum(string mbid)
+        public async Task<AlbumInfoResponse> RequestInfoAlbum(string mbid)
         {
             QueryInfoMbidParam param = new QueryInfoMbidParam()
             {
@@ -75,7 +75,7 @@ namespace AudioTagger.ui.MVP.LastFM
             return response;
         }
 
-        public async Task<AlbumInfoResponse> QueryInfoAlbum(string artist, string album)
+        public async Task<AlbumInfoResponse> RequestInfoAlbum(string artist, string album)
         {
             QueryInfoAlbumParam param = new QueryInfoAlbumParam()
             {
@@ -83,6 +83,8 @@ namespace AudioTagger.ui.MVP.LastFM
                 artist = artist,
                 album = album
             };
+
+            
             var LastFMApi = RestService.For<IRequestAPI>(LASTFM_ENDPOINT);
             var response = await LastFMApi.SearchAlbumInfo(param);
             return response;
